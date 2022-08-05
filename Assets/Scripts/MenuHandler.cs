@@ -25,7 +25,7 @@ public class MenuHandler : MonoBehaviour
     private void OnStartClick()
     {
         SceneManager.LoadScene(2, LoadSceneMode.Single);
-        SceneManager.UnloadSceneAsync(1);
+        //SceneManager.UnloadSceneAsync(1);
     }
 
     private void ExitButtonClick()

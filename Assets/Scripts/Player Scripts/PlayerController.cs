@@ -42,6 +42,11 @@ public class PlayerController : MonoBehaviour
 
     public Button restartButton;
 
+    [SerializeField]
+    public GameObject powerUpIndicator;
+
+    public bool hasPoweUp = false;
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -200,9 +205,19 @@ public class PlayerController : MonoBehaviour
             AudioManager.instance.play_PickUpSound();
         }
 
+        if(target.tag== Tags.POWERUP)
+        {
+            hasPoweUp = true;
+            AudioManager.instance.play_PowerSound();
+            target.gameObject.SetActive(false);
+            StartCoroutine(PowerUPCountdownRoutine());
+        }
 
+        if(target.tag==Tags.BOMB || target.tag==Tags.WALL && hasPoweUp)
+        {
 
-        if (target.tag == Tags.WALL || target.tag == Tags.BOMB || target.tag==Tags.TAIL )
+        }
+        else if (target.tag == Tags.WALL || target.tag == Tags.BOMB || target.tag==Tags.TAIL )
         {
             Time.timeScale = 0f;
             AudioManager.instance.play_DeadSound();
@@ -212,6 +227,14 @@ public class PlayerController : MonoBehaviour
             gameOver.SetActive(true);
             
         }
+    }
+
+    IEnumerator PowerUPCountdownRoutine()
+    {
+        powerUpIndicator.SetActive(true);
+        yield return new WaitForSeconds(8);
+        hasPoweUp = false;
+        powerUpIndicator.SetActive(false);
     }
 }
 

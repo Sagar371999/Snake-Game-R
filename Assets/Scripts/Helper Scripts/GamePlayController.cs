@@ -12,7 +12,7 @@ public class GamePlayController : MonoBehaviour
 {
     public static GamePlayController instance;
 
-    public GameObject fruit_PickUp, bomb_PickUp;
+    public GameObject fruit_PickUp, bomb_PickUp, powerUp_PickUp;
 
     private float min_X = -4.25f, max_X = 4.25f, min_Y = -2.26f, max_Y = 2.26f;
 
@@ -26,6 +26,8 @@ public class GamePlayController : MonoBehaviour
     [SerializeField]
     private Button exitButtonMainGame;
 
+
+    private 
     void Awake()
     {
         MakeInstance();
@@ -36,7 +38,6 @@ public class GamePlayController : MonoBehaviour
         score_Text = GameObject.Find("Score").GetComponent<TextMeshProUGUI>();
         
         
-
         Invoke("StartSpawning", 5.0f);
     }
     void MakeInstance()
@@ -59,18 +60,25 @@ public class GamePlayController : MonoBehaviour
     {
         yield return new WaitForSeconds(Random.Range(1f, 1.5f));
 
-        if (Random.Range(0, 10) >= 2)
+        if (Random.Range(0, 10) > 2)
         {
-            Instantiate(fruit_PickUp, new Vector3(Random.Range(min_X, max_X), Random.Range(min_Y, max_Y), 
-                z_Pos),Quaternion.identity);
+            Instantiate(fruit_PickUp, new Vector3(Random.Range(min_X, max_X), Random.Range(min_Y, max_Y),
+                z_Pos), Quaternion.identity);
         }
-        else
+
+        else if(Random.Range(0, 10) == 2)
         {
             Instantiate(bomb_PickUp, new Vector3(Random.Range(min_X, max_X), Random.Range(min_Y, max_Y),
                 z_Pos), Quaternion.identity);
         }
 
-        Invoke("StartSpawning", 0f);
+        else
+        {
+            Instantiate(powerUp_PickUp, new Vector3(Random.Range(min_X, max_X), Random.Range(min_Y, max_Y),
+                z_Pos), Quaternion.identity);
+        }
+
+        Invoke("StartSpawning", 1f);
     }
 
     public void IncreaseScore()
@@ -82,6 +90,6 @@ public class GamePlayController : MonoBehaviour
     public void RestartGame()
     {
         SceneManager.LoadScene("Boot");
-        SceneManager.UnloadSceneAsync(2);
+        //SceneManager.UnloadSceneAsync(2);
     }
 }

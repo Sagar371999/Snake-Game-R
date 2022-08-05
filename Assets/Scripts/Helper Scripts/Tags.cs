@@ -8,6 +8,7 @@ public class Tags : MonoBehaviour
     public static string FRUIT = "Fruit";
     public static string BOMB = "Bomb";
     public static string TAIL = "Tail";
+    public static string POWERUP = "PowerUp";
 }
 public class Metrics
 {

@@ -13,6 +13,7 @@ public class DeactivatePickUp : MonoBehaviour
     // Update is called once per frame
     void Deactivate()
     {
-        gameObject.SetActive(false);
+        //gameObject.SetActive(false);
+        Destroy(gameObject);
     }
 }

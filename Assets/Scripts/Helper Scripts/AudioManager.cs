@@ -8,6 +8,7 @@ public class AudioManager : MonoBehaviour
 
     public AudioClip pickUp_Sound;
     public AudioClip dead_Sound;
+    public AudioClip Power_Sound;
     // Start is called before the first frame update
     void Awake()
     {
@@ -30,5 +31,9 @@ public class AudioManager : MonoBehaviour
     public void play_DeadSound()
     {
         AudioSource.PlayClipAtPoint(dead_Sound, transform.position);
+    }
+    public void play_PowerSound()
+    {
+        AudioSource.PlayClipAtPoint(Power_Sound, transform.position);
     }
 }
