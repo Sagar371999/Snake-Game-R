@@ -36,8 +36,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody main_Body;
     private Rigidbody head_Body;
     private Transform tr;
-    //private TextMeshProUGUI gameOver_Text;
-
+    
     private bool create_Node_At_Tail;
 
     public Button restartButton;
@@ -47,12 +46,28 @@ public class PlayerController : MonoBehaviour
 
     public bool hasPoweUp = false;
 
+    public GameObject CameraAudio;
+
+    [SerializeField]
+    private float screenTop;
+    [SerializeField]
+    private float screenBottom;
+    [SerializeField]
+    private float screenLeft ;
+    [SerializeField]
+    private float screenRight ;
+
+
+    private bool PowerUpB;
+
+    //public ParticleSystem explosionParticle;
+
     // Start is called before the first frame update
     void Awake()
     {
+        
         tr = transform;
         main_Body = GetComponent<Rigidbody>();
-        //gameOver_Text = GameObject.Find("GameOver").GetComponent<TextMeshProUGUI>();
 
         InitSnakeNodes();
         InitPlayer();
@@ -69,15 +84,43 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        
+        //StartCoroutine(StartingPause());
         counter = 0f;
         Time.timeScale = 1f;
+
+        PowerUpB = false;
     }
 
     // Update is called once per frame
     void Update()
     {
         CheckMovementFrequency();
+
+        if (PowerUpB == true)
+        {
+            Vector3 newPos = transform.position;
+            if (transform.position.y > screenTop)
+            {
+                newPos.y = screenBottom;
+            }
+            if (transform.position.y < screenBottom)
+            {
+                newPos.y = screenTop;
+            }
+            if (transform.position.x > screenRight)
+            {
+                newPos.x = screenLeft;
+            }
+            if (transform.position.x < screenLeft)
+            {
+                newPos.x = screenRight;
+            }
+            transform.position = newPos;
+        }
+
     }
+    
     private void FixedUpdate()
     {
         if (move)
@@ -98,7 +141,7 @@ public class PlayerController : MonoBehaviour
     }
     void SetDirectionRadom()
     {
-        int dirRandom = Random.Range(0, (int)PlayerDirection.COUNT);
+        int dirRandom = (int)PlayerDirection.RIGHT;  //Random.Range(0, (int)PlayerDirection.COUNT);
         direction = (PlayerDirection)dirRandom;
     }
 
@@ -171,7 +214,7 @@ public class PlayerController : MonoBehaviour
             move = true;
         }
     }
-
+    
     public void SetInputDirection(PlayerDirection dir)
     {
         if(dir==PlayerDirection.UP && direction ==PlayerDirection.DOWN ||
@@ -207,24 +250,30 @@ public class PlayerController : MonoBehaviour
 
         if(target.tag== Tags.POWERUP)
         {
-            hasPoweUp = true;
+           
             AudioManager.instance.play_PowerSound();
             target.gameObject.SetActive(false);
-            StartCoroutine(PowerUPCountdownRoutine());
+            StartCoroutine(PowerUPCountdownRoutine()); 
         }
 
-        if(target.tag==Tags.BOMB || target.tag==Tags.WALL && hasPoweUp)
+        if((target.tag==Tags.BOMB || target.tag==Tags.WALLIN) /*|| target.tag == Tags.TAIL*/ && hasPoweUp)
         {
-
+            Debug.Log("Has PowerUp And touched the Walls or Bombs");
         }
-        else if (target.tag == Tags.WALL || target.tag == Tags.BOMB || target.tag==Tags.TAIL )
+
+
+
+        else if (target.tag == Tags.WALL ||target.tag==Tags.WALLIN|| target.tag == Tags.BOMB || target.tag==Tags.TAIL )
         {
             Time.timeScale = 0f;
-            AudioManager.instance.play_DeadSound();
 
+            CameraAudio.GetComponent<AudioSource>().Stop();
+            AudioManager.instance.play_DeadSound();
             restartButton.gameObject.SetActive(true);
 
             gameOver.SetActive(true);
+
+            //explosionParticle.Play();
             
         }
     }
@@ -232,10 +281,15 @@ public class PlayerController : MonoBehaviour
     IEnumerator PowerUPCountdownRoutine()
     {
         powerUpIndicator.SetActive(true);
+        PowerUpB = true;
+        hasPoweUp = true;
         yield return new WaitForSeconds(8);
+        PowerUpB = false;
         hasPoweUp = false;
         powerUpIndicator.SetActive(false);
     }
+
+    
 }
 
 

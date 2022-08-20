@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Tags : MonoBehaviour
 {
+    public static string WALLIN = "WallIn";
     public static string WALL = "Wall";
     public static string FRUIT = "Fruit";
     public static string BOMB = "Bomb";

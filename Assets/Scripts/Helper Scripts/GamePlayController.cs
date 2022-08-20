@@ -26,19 +26,27 @@ public class GamePlayController : MonoBehaviour
     [SerializeField]
     private Button exitButtonMainGame;
 
+    [SerializeField]
+    private PlayerController playerController;
 
-    private 
+    [SerializeField]
+    private GameObject StartAnim;
+
+
     void Awake()
     {
+        Invoke("PauseGamePlayer", 0f);
+        //StartCoroutine(StartingPause());
         MakeInstance();
     }
 
     private void Start()
     {
         score_Text = GameObject.Find("Score").GetComponent<TextMeshProUGUI>();
-        
-        
+
         Invoke("StartSpawning", 5.0f);
+
+        Invoke("StartPowerUpSpawning", 5.0f);
     }
     void MakeInstance()
     {
@@ -51,10 +59,17 @@ public class GamePlayController : MonoBehaviour
     {
         StartCoroutine(SpawnPickUps());
     }
-    public void CancleSpawning()
+
+    void StartPowerUpSpawning()
     {
-        CancelInvoke("StartSpawning");
+        StartCoroutine(SpawnPowerUp());
     }
+
+    void PauseGamePlayer()
+    {
+        StartCoroutine(StartingPause());
+    }
+
 
     IEnumerator SpawnPickUps()
     {
@@ -66,19 +81,38 @@ public class GamePlayController : MonoBehaviour
                 z_Pos), Quaternion.identity);
         }
 
-        else if(Random.Range(0, 10) == 2)
+        else if(Random.Range(-4, 10) <= 2)
         {
             Instantiate(bomb_PickUp, new Vector3(Random.Range(min_X, max_X), Random.Range(min_Y, max_Y),
                 z_Pos), Quaternion.identity);
         }
 
-        else
-        {
-            Instantiate(powerUp_PickUp, new Vector3(Random.Range(min_X, max_X), Random.Range(min_Y, max_Y),
-                z_Pos), Quaternion.identity);
-        }
 
-        Invoke("StartSpawning", 1f);
+        Invoke("StartSpawning", 0.5f);
+    }
+
+    IEnumerator SpawnPowerUp()
+    {
+        yield return new WaitForSeconds(2);
+
+        Instantiate(powerUp_PickUp, new Vector3(Random.Range(min_X, max_X), Random.Range(min_Y, max_Y),
+                z_Pos), Quaternion.identity);
+
+        Invoke("StartPowerUpSpawning", 15f);
+    }
+    IEnumerator StartingPause()
+    {
+        Debug.Log("Started");
+        playerController.gameObject.SetActive(false);
+        StartAnim.SetActive(true);
+
+        yield return new WaitForSeconds(3f);
+
+        StartAnim.SetActive(false);
+        Debug.Log("Ended");
+        playerController.gameObject.SetActive(true);
+
+        
     }
 
     public void IncreaseScore()
@@ -89,7 +123,7 @@ public class GamePlayController : MonoBehaviour
 
     public void RestartGame()
     {
-        SceneManager.LoadScene("Boot");
+        SceneManager.LoadScene("Menu");
         //SceneManager.UnloadSceneAsync(2);
     }
 }

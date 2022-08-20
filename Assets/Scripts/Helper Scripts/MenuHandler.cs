@@ -11,7 +11,7 @@ public class MenuHandler : MonoBehaviour
 {
     public Button startButton;
     public Button exitButton;
-
+    
     private void OnEnable()
     {
         startButton.onClick.AddListener(OnStartClick);
@@ -24,8 +24,9 @@ public class MenuHandler : MonoBehaviour
     }
     private void OnStartClick()
     {
-        SceneManager.LoadScene(2, LoadSceneMode.Single);
+        SceneManager.LoadScene(1, LoadSceneMode.Single);
         //SceneManager.UnloadSceneAsync(1);
+        
     }
 
     private void ExitButtonClick()

@@ -9,7 +9,8 @@ public class AudioManager : MonoBehaviour
     public AudioClip pickUp_Sound;
     public AudioClip dead_Sound;
     public AudioClip Power_Sound;
-    // Start is called before the first frame update
+
+
     void Awake()
     {
         MakeInstance();
@@ -36,4 +37,5 @@ public class AudioManager : MonoBehaviour
     {
         AudioSource.PlayClipAtPoint(Power_Sound, transform.position);
     }
+    
 }
